@@ -16,8 +16,12 @@ set guioptions-=L
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
+let g:indent_guides_enable_on_vim_startup = 0
+let g:indentLine_char = '│'
+set list lcs=tab:\│\ 
+set guifont=Meslo\ LG\ S\ DZ\ for\ Powerline:h13
 
-colorscheme base16-monokai
+colorscheme base16-eighties
 
 if has("gui_macvim")
   " Press Ctrl-Tab to switch between open tabs (like browser tabs) to 
