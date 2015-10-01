@@ -22,6 +22,7 @@
     Plugin 'Valloric/YouCompleteMe'
     Plugin 'marijnh/tern_for_vim'
     Plugin 'terryma/vim-multiple-cursors'
+    Plugin 'Yggdroot/indentLine'
   " }}}
 
   call vundle#end()
