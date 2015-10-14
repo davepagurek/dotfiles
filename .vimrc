@@ -23,6 +23,12 @@
     Plugin 'marijnh/tern_for_vim'
     Plugin 'terryma/vim-multiple-cursors'
     Plugin 'Yggdroot/indentLine'
+    Plugin 'ap/vim-css-color'
+    Plugin 'fatih/vim-go'
+    Plugin 'sophacles/vim-processing'
+    Plugin 'godlygeek/tabular'
+    Plugin 'plasticboy/vim-markdown'
+    Plugin 'hkmix/vim-george'
   " }}}
 
   call vundle#end()
@@ -35,6 +41,8 @@
   colorscheme base16-eighties
   set guifont=Liberation\ Mono\ for\ Powerline:h12
   syntax on
+  set incsearch
+  set hlsearch
 
   highlight clear SignColumn
   set guioptions-=L
@@ -50,7 +58,7 @@
   " Indent guides {{{
     let g:indent_guides_enable_on_vim_startup = 0
     let g:indentLine_char = '│'
-    set list lcs=tab:\│\
+    set list lcs=tab:\│\ 
   " }}} 
 " }}}
 
@@ -62,11 +70,15 @@
 
   autocmd FileType go set noexpandtab|set tabstop=4|set shiftwidth=4|set softtabstop=4
   autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2
+  autocmd FileType markdown set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType perl set tabstop=4|set shiftwidth=4|set softtabstop=4
   autocmd FileType perl6 set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType scss set tabstop=2|set shiftwidth=2|set softtabstop=2
 
-  let JSHintUpdateWriteOnly=1
+  " Automatic autocompletion triggering for CSS
+  let g:ycm_semantic_triggers = {
+    \   'css': [ 're!^\s{4}', 're!:\s+' ],
+    \ }
 " }}}
 
 " Key mappings {{{
@@ -92,10 +104,16 @@
   imap <silent> <home> <C-o>g<home>
   map <silent> <End> g<End>
   imap <silent> <End> <C-o>g<End>
+
+  " Change leader key to comma
+  let mapleader=","
 " }}}
 
 " Environment setup {{{
   let g:AutoPairsMultilineClose=0
+
+  set splitbelow
+  set splitright
 
   " Send more characters for redraws
   set ttyfast
