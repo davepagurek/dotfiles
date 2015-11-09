@@ -43,6 +43,8 @@
   syntax on
   set incsearch
   set hlsearch
+  set conceallevel=0
+  let g:vim_json_syntax_conceal=0
 
   highlight clear SignColumn
   set guioptions-=L
@@ -107,6 +109,10 @@
 
   " Change leader key to comma
   let mapleader=","
+
+  " make < > shifts keep selection
+  vnoremap < <gv
+  vnoremap > >gv
 " }}}
 
 " Environment setup {{{
@@ -114,6 +120,9 @@
 
   set splitbelow
   set splitright
+
+  " case-insensitive search until an uppercase letter used
+  set smartcase
 
   " Send more characters for redraws
   set ttyfast
