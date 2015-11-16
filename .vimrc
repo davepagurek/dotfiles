@@ -29,6 +29,8 @@
     Plugin 'godlygeek/tabular'
     Plugin 'plasticboy/vim-markdown'
     Plugin 'hkmix/vim-george'
+    Plugin 'jaxbot/syntastic-react'
+    Plugin 'elzr/vim-json'
   " }}}
 
   call vundle#end()
@@ -41,8 +43,6 @@
   colorscheme base16-eighties
   set guifont=Liberation\ Mono\ for\ Powerline:h12
   syntax on
-  set incsearch
-  set hlsearch
   set conceallevel=0
   let g:vim_json_syntax_conceal=0
 
@@ -76,6 +76,9 @@
   autocmd FileType perl set tabstop=4|set shiftwidth=4|set softtabstop=4
   autocmd FileType perl6 set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType scss set tabstop=2|set shiftwidth=2|set softtabstop=2
+
+ let g:syntastic_javascript_checkers = ['jsxhint']
+ let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
 
   " Automatic autocompletion triggering for CSS
   let g:ycm_semantic_triggers = {
@@ -122,7 +125,24 @@
   set splitright
 
   " case-insensitive search until an uppercase letter used
+  set ignorecase
   set smartcase
+  set incsearch
+  set hlsearch
+
+  set nocompatible
+
+  " The default for 'backspace' is very confusing to new users, so change it to a
+  " more sensible value.  Add "set backspace&" to your ~/.vimrc to reset it.
+  set backspace+=indent,eol,start
+
+  " Disable localized menus for now since only some items are translated (e.g.
+  " the entire MacVim menu is set up in a nib file which currently only is
+  " translated to English).
+  set langmenu=none
+
+  " ignores for ctrl-p
+  let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 
   " Send more characters for redraws
   set ttyfast
