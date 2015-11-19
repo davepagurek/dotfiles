@@ -13,13 +13,15 @@
     Plugin 'bling/vim-airline'
     Plugin 'tpope/vim-surround'
     Plugin 'chriskempson/base16-vim'
+    Plugin 'toupeira/vim-desertink'
+    Plugin 'trusktr/seti.vim'
+    Plugin 'flazz/vim-colorschemes'
     Plugin 'jiangmiao/auto-pairs'
     Plugin 'airblade/vim-gitgutter'
     Plugin 'isRuslan/vim-es6'
     Plugin 'scrooloose/nerdcommenter'
     Plugin 'vim-scripts/DrawIt'
     Plugin 'scrooloose/syntastic'
-    Plugin 'Valloric/YouCompleteMe'
     Plugin 'marijnh/tern_for_vim'
     Plugin 'terryma/vim-multiple-cursors'
     Plugin 'Yggdroot/indentLine'
@@ -31,6 +33,13 @@
     Plugin 'hkmix/vim-george'
     Plugin 'jaxbot/syntastic-react'
     Plugin 'elzr/vim-json'
+    if !has('nvim')
+      Plugin 'Valloric/YouCompleteMe'
+    else
+      Plugin 'Shougo/context_filetype.vim'
+      Plugin 'euclio/vim-markdown-composer'
+      Plugin 'Shougo/deoplete.nvim'
+    endif
   " }}}
 
   call vundle#end()
@@ -40,7 +49,6 @@
 " Visuals {{{
   set number
   set background=dark
-  colorscheme base16-eighties
   set guifont=Liberation\ Mono\ for\ Powerline:h12
   syntax on
   set conceallevel=0
@@ -49,6 +57,7 @@
   highlight clear SignColumn
   set guioptions-=L
   set ttimeoutlen=25 " Get rid of lag leaving insert mode
+  set scrolloff=3
 
   " Airline config {{{
     let g:airline_powerline_fonts = 1
@@ -56,6 +65,8 @@
     let g:airline#extensions#tabline#fnamemod = ':t' 
     set laststatus=2
   " }}}
+
+  colorscheme Tomorrow-Night
 
   " Indent guides {{{
     let g:indent_guides_enable_on_vim_startup = 0
@@ -69,6 +80,17 @@
   set shiftwidth=2
   set tabstop=2
   set expandtab
+
+  if has("nvim")
+    " Enable deoplete
+    let g:deoplete#enable_at_startup = 1
+
+    " Select autocompletion with tab
+    inoremap <silent><expr><Tab>
+          \ pumvisible() ? "\<C-n>" :
+          \ "\<Tab>"
+          "\ deoplete#mappings#manual_complete()
+  endif
 
   autocmd FileType go set noexpandtab|set tabstop=4|set shiftwidth=4|set softtabstop=4
   autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2
@@ -87,12 +109,10 @@
 " }}}
 
 " Key mappings {{{
-  if has("gui_macvim")
-    " Press Ctrl-Tab to switch between open tabs (like browser tabs) to
-    " the right side. Ctrl-Shift-Tab goes the other way.
-    noremap <C-Tab> :tabnext<CR>
-    noremap <C-S-Tab> :tabprev<CR>
+  if has("nvim")
+    tnoremap <Esc> <C-\><C-n>
   endif
+
   noremap L :tabnext<CR>
   noremap H :tabprev<CR>
   set whichwrap+=>,l
@@ -152,7 +172,9 @@
 
   " Set this to the name of your terminal that supports mouse codes.
   " Must be one of: xterm, xterm2, netterm, dec, jsbterm, pterm
-  set ttymouse=xterm2
+  if !has('nvim')
+    set ttymouse=xterm2
+  endif
 
   " OS-level copy and paste
   set clipboard=unnamed
@@ -162,4 +184,19 @@
     let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
     let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
   endif
+  if has("nvim")
+    let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+  endif
 " }
+
+
+function! RefreshUI()
+  if exists(':AirlineRefresh')
+    AirlineRefresh
+  else
+    " Clear & redraw the screen, then redraw all statuslines.
+    redraw!
+    redrawstatus!
+  endif
+endfunction
+call RefreshUI()
