@@ -14,7 +14,7 @@
     Plugin 'tpope/vim-surround'
     Plugin 'chriskempson/base16-vim'
     Plugin 'toupeira/vim-desertink'
-    Plugin 'trusktr/seti.vim'
+    Plugin 'mkarmona/colorsbox'
     Plugin 'flazz/vim-colorschemes'
     Plugin 'jiangmiao/auto-pairs'
     Plugin 'airblade/vim-gitgutter'
@@ -24,7 +24,10 @@
     Plugin 'scrooloose/syntastic'
     Plugin 'marijnh/tern_for_vim'
     Plugin 'terryma/vim-multiple-cursors'
-    Plugin 'Yggdroot/indentLine'
+    if !has('g:loaded_indentLine')
+      let g:loaded_indentLine = 1
+      Plugin 'Yggdroot/indentLine'
+    endif
     Plugin 'ap/vim-css-color'
     Plugin 'fatih/vim-go'
     Plugin 'sophacles/vim-processing'
@@ -33,8 +36,13 @@
     Plugin 'hkmix/vim-george'
     Plugin 'jaxbot/syntastic-react'
     Plugin 'elzr/vim-json'
+    Plugin 'derekwyatt/vim-scala'
+    Plugin 'vim-perl/vim-perl'
+    Plugin 'rizzatti/dash.vim'
     if !has('nvim')
       Plugin 'Valloric/YouCompleteMe'
+      Plugin 'benekastah/neomake'
+      Plugin 'floobits/floobits-neovim'
     else
       Plugin 'Shougo/context_filetype.vim'
       Plugin 'euclio/vim-markdown-composer'
@@ -50,7 +58,11 @@
   set number
   set background=dark
   set guifont=Liberation\ Mono\ for\ Powerline:h12
-  syntax on
+  "syntax on
+  if !exists("g:syntax_on")
+    syntax enable
+    colorscheme Tomorrow-Night-Bright
+  endif
   set conceallevel=0
   let g:vim_json_syntax_conceal=0
 
@@ -59,44 +71,49 @@
   set ttimeoutlen=25 " Get rid of lag leaving insert mode
   set scrolloff=3
 
+  set cursorline
+
   " Airline config {{{
+    "let g:airline_theme="powerlinish"
     let g:airline_powerline_fonts = 1
     let g:airline#extensions#tabline#enabled = 1
     let g:airline#extensions#tabline#fnamemod = ':t' 
     set laststatus=2
   " }}}
-
-  colorscheme Tomorrow-Night
-
   " Indent guides {{{
     let g:indent_guides_enable_on_vim_startup = 0
+    if !exists('g:indentLine_enabled')
+      let g:indentLine_enabled = 0
+    endif
+    let g:indentLine_showFirstIndentLevel = 1
     let g:indentLine_char = '│'
+    let g:indentLine_first_char = '│'
+    "let g:indentLine_concealcursor=0
+    "let g:indentLine_noConcealCursor=1
     set list lcs=tab:\│\ 
-  " }}} 
+    "autocmd BufRead * :IndentLinesEnable
+    function! ShowLines()
+      if has('nvim_dot_app')
+        put ='called once'
+      else
+        :IndentLinesReset
+      endif
+    endfunction
+    au FileType,BufRead,BufEnter,BufNewFile * call ShowLines() 
+  " }}}
 " }}}
 
 " Language-specific settings {{{
   set softtabstop=2
   set shiftwidth=2
   set tabstop=2
-  set expandtab
-
-  if has("nvim")
-    " Enable deoplete
-    let g:deoplete#enable_at_startup = 1
-
-    " Select autocompletion with tab
-    inoremap <silent><expr><Tab>
-          \ pumvisible() ? "\<C-n>" :
-          \ "\<Tab>"
-          "\ deoplete#mappings#manual_complete()
-  endif
+  set expandtab 
 
   autocmd FileType go set noexpandtab|set tabstop=4|set shiftwidth=4|set softtabstop=4
   autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType markdown set tabstop=2|set shiftwidth=2|set softtabstop=2
-  autocmd FileType perl set tabstop=4|set shiftwidth=4|set softtabstop=4
-  autocmd FileType perl6 set tabstop=2|set shiftwidth=2|set softtabstop=2
+  "autocmd FileType perl set tabstop=4|set shiftwidth=4|set softtabstop=4
+  "autocmd FileType perl6 set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType scss set tabstop=2|set shiftwidth=2|set softtabstop=2
 
  let g:syntastic_javascript_checkers = ['jsxhint']
@@ -111,6 +128,30 @@
 " Key mappings {{{
   if has("nvim")
     tnoremap <Esc> <C-\><C-n>
+
+    " Enable deoplete
+    let g:deoplete#enable_at_startup = 1
+
+    "\ deoplete#mappings#manual_complete()
+    " Select autocompletion with tab
+    inoremap <silent><expr><Tab>
+          \ pumvisible() ? "\<C-n>" :
+          \ "\<Tab>"
+    inoremap <silent><expr><S-Tab>
+          \ pumvisible() ? "\<C-e>" :
+          \ "\<S-tab>"
+    inoremap <silent><expr><Esc>
+          \ pumvisible() ? "\<C-y>\<Esc>" :
+          \ "\<Esc>"
+    inoremap <silent><expr><Up>
+          \ pumvisible() ? "\<C-n>" :
+          \ "\<Up>"
+    inoremap <silent><expr><Down>
+          \ pumvisible() ? "\<C-n>" :
+          \ "\<Down>"
+    inoremap <silent><expr><Enter>
+          \ pumvisible() ? "\<C-y><Enter>" :
+          \ "\<Enter>"
   endif
 
   noremap L :tabnext<CR>
@@ -197,6 +238,9 @@ function! RefreshUI()
     " Clear & redraw the screen, then redraw all statuslines.
     redraw!
     redrawstatus!
+  endif 
+  if exists(':IndentLinesEnable')
+    IndentLinesEnable
   endif
 endfunction
-call RefreshUI()
+"call RefreshUI()
