@@ -1,4 +1,6 @@
 " vim:fdm=marker
+let g:python_host_prog = '/usr/local/bin/python'
+let g:python3_host_prog = '/usr/local/bin/python3'
 
 " Vundle setup {{{
   set nocompatible
@@ -8,15 +10,24 @@
   Plugin 'VundleVim/Vundle.vim'
 
   " Plugins {{{
+    Plugin 'lervag/vimtex'
     Plugin 'tpope/vim-fugitive'
     Plugin 'kien/ctrlp.vim'
     Plugin 'bling/vim-airline'
+    Plugin 'paranoida/vim-airlineish'
+    Plugin 'vim-airline/vim-airline-themes'
     Plugin 'tpope/vim-surround'
     Plugin 'chriskempson/base16-vim'
+    Plugin 'aliou/moriarty.vim'
+    Plugin 'vim-scripts/obsidian2.vim'
+    Plugin 'joshdick/onedark.vim'
+    Plugin 'joshdick/airline-onedark.vim'
+    Plugin 'gosukiwi/vim-atom-dark'
     Plugin 'toupeira/vim-desertink'
     Plugin 'mkarmona/colorsbox'
     Plugin 'flazz/vim-colorschemes'
-    Plugin 'jiangmiao/auto-pairs'
+    Plugin 'davepagurek/auto-pairs'
+    "Plugin 'Townk/vim-autoclose'
     Plugin 'airblade/vim-gitgutter'
     Plugin 'isRuslan/vim-es6'
     Plugin 'scrooloose/nerdcommenter'
@@ -33,19 +44,16 @@
     Plugin 'sophacles/vim-processing'
     Plugin 'godlygeek/tabular'
     Plugin 'plasticboy/vim-markdown'
-    Plugin 'hkmix/vim-george'
     Plugin 'jaxbot/syntastic-react'
     Plugin 'elzr/vim-json'
     Plugin 'derekwyatt/vim-scala'
     Plugin 'vim-perl/vim-perl'
-    Plugin 'rizzatti/dash.vim'
     if !has('nvim')
       Plugin 'Valloric/YouCompleteMe'
       Plugin 'benekastah/neomake'
       Plugin 'floobits/floobits-neovim'
     else
       Plugin 'Shougo/context_filetype.vim'
-      Plugin 'euclio/vim-markdown-composer'
       Plugin 'Shougo/deoplete.nvim'
     endif
   " }}}
@@ -61,9 +69,12 @@
   "syntax on
   if !exists("g:syntax_on")
     syntax enable
-    colorscheme Tomorrow-Night-Bright
+    colorscheme onedark
+  let g:onedark_terminal_italics=1
   endif
   set conceallevel=0
+  set cole=0 
+  au FileType * setl cole=0 
   let g:vim_json_syntax_conceal=0
 
   highlight clear SignColumn
@@ -73,11 +84,31 @@
 
   set cursorline
 
+
+  "Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
+  "If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
+  "(see < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
+  if (empty($TMUX))
+    if (has("nvim"))
+      "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+      let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    endif
+    "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+    "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+    " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+    if (has("termguicolors"))
+      set termguicolors
+    endif
+  endif
+
   " Airline config {{{
-    "let g:airline_theme="powerlinish"
+    let g:airline_theme='base16_ocean'
     let g:airline_powerline_fonts = 1
     let g:airline#extensions#tabline#enabled = 1
-    let g:airline#extensions#tabline#fnamemod = ':t' 
+    let g:airline#extensions#tabline#fnamemod = ':t'
+    let g:airline#extensions#whitespace#enabled = 1
+    let g:airline#extensions#wordcount#enabled = 0
+    let g:airline#extensions#tabline#show_close_button = 1
     set laststatus=2
   " }}}
   " Indent guides {{{
@@ -99,7 +130,7 @@
         :IndentLinesReset
       endif
     endfunction
-    au FileType,BufRead,BufEnter,BufNewFile * call ShowLines() 
+    au FileType,BufRead,BufEnter,BufNewFile * call ShowLines()
   " }}}
 " }}}
 
@@ -107,17 +138,20 @@
   set softtabstop=2
   set shiftwidth=2
   set tabstop=2
-  set expandtab 
+  set expandtab
+  let g:tex_conceal = ""
 
   autocmd FileType go set noexpandtab|set tabstop=4|set shiftwidth=4|set softtabstop=4
   autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType markdown set tabstop=2|set shiftwidth=2|set softtabstop=2
+  autocmd FileType cpp set tabstop=4|set shiftwidth=4|set softtabstop=4
   "autocmd FileType perl set tabstop=4|set shiftwidth=4|set softtabstop=4
   "autocmd FileType perl6 set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType scss set tabstop=2|set shiftwidth=2|set softtabstop=2
 
- let g:syntastic_javascript_checkers = ['jsxhint']
- let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
+ let g:syntastic_javascript_checkers = ['eslint']
+ let g:syntastic_cpp_compiler = 'clang++'
+ let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
 
   " Automatic autocompletion triggering for CSS
   let g:ycm_semantic_triggers = {
@@ -126,6 +160,7 @@
 " }}}
 
 " Key mappings {{{
+  set smartindent
   if has("nvim")
     tnoremap <Esc> <C-\><C-n>
 
@@ -177,10 +212,20 @@
   " make < > shifts keep selection
   vnoremap < <gv
   vnoremap > >gv
+
+  " for when I hold shift too long
+  :command WQ wq
+  :command Wq wq
+  :command W w
+  :command Q q
 " }}}
 
 " Environment setup {{{
   let g:AutoPairsMultilineClose=0
+  "set runtimepath+=~/.vim/bundle/deoplete.nvim/
+  "call remote#host#RegisterPlugin('python3', '~/.vim/bundle/deoplete.nvim/rplugin/python3/deoplete.py', [
+      "\ {'sync': 1, 'name': 'DeopleteInitializePython', 'type': 'command', 'opts': {}},
+     "\ ])
 
   set splitbelow
   set splitright
@@ -204,6 +249,7 @@
 
   " ignores for ctrl-p
   let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+  set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.idea/*,*/.DS_Store,*/vendor,*/*.o,*/*.d
 
   " Send more characters for redraws
   set ttyfast
@@ -238,7 +284,7 @@ function! RefreshUI()
     " Clear & redraw the screen, then redraw all statuslines.
     redraw!
     redrawstatus!
-  endif 
+  endif
   if exists(':IndentLinesEnable')
     IndentLinesEnable
   endif
