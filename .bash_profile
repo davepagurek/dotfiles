@@ -1,10 +1,14 @@
 export GOPATH=$HOME/Documents/Projects/Go
 export PATH=$PATH:$GOPATH/bin
 export PATH="/usr/local/bin:/usr/local/share/python:${PATH}"
+export PATH="$HOME/android-sdk-macosx/platform-tools:${PATH}"
+export PATH="/usr/local/texlive/2015basic/bin/universal-darwin:${PATH}"
+export PATH="$HOME/node_modules/.bin:${PATH}"
 export GREP_OPTIONS='--color=auto'
 alias ls='ls -FG'
 alias vim='nvim'
 alias vi='nvim'
+alias fb='node ~/Documents/Projects/fb-messenger-cli/cli.js'
 
 # Git prompt
 if [ -f "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh"  ]; then
@@ -22,3 +26,10 @@ alias apacherestart='brew services restart httpd22'
 
 source ~/.profile
 export PATH=~/.rakudobrew/bin:$PATH
+
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+export PATH="/usr/local/opt/llvm/bin:$PATH"
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
+export MANPATH="/usr/local/opt/findutils/libexec/gnuman:$MANPATH"
