@@ -10,6 +10,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
   Plugin 'VundleVim/Vundle.vim'
 
   " Plugins {{{
+    Plugin 'vim-ruby/vim-ruby'
     Plugin 'lervag/vimtex'
     Plugin 'tpope/vim-fugitive'
     Plugin 'kien/ctrlp.vim'
@@ -21,12 +22,16 @@ let g:python3_host_prog = '/usr/local/bin/python3'
     Plugin 'aliou/moriarty.vim'
     Plugin 'vim-scripts/obsidian2.vim'
     Plugin 'joshdick/onedark.vim'
+    Plugin 'rakr/vim-one'
     Plugin 'joshdick/airline-onedark.vim'
     Plugin 'gosukiwi/vim-atom-dark'
     Plugin 'toupeira/vim-desertink'
     Plugin 'mkarmona/colorsbox'
     Plugin 'flazz/vim-colorschemes'
-    Plugin 'davepagurek/auto-pairs'
+    Plugin 'zanglg/nova.vim'
+    Plugin 'ayu-theme/ayu-vim'
+    Plugin 'roosta/srcery'
+    Plugin 'jiangmiao/auto-pairs'
     "Plugin 'Townk/vim-autoclose'
     Plugin 'airblade/vim-gitgutter'
     Plugin 'isRuslan/vim-es6'
@@ -40,6 +45,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
       Plugin 'Yggdroot/indentLine'
     endif
     Plugin 'ap/vim-css-color'
+    Plugin 'dart-lang/dart-vim-plugin'
     Plugin 'fatih/vim-go'
     Plugin 'sophacles/vim-processing'
     Plugin 'godlygeek/tabular'
@@ -48,6 +54,9 @@ let g:python3_host_prog = '/usr/local/bin/python3'
     Plugin 'elzr/vim-json'
     Plugin 'derekwyatt/vim-scala'
     Plugin 'vim-perl/vim-perl'
+    Plugin 'iamcco/mathjax-support-for-mkdp'
+    Plugin 'iamcco/markdown-preview.vim'
+    Plugin 'drmingdrmer/vim-syntax-markdown'
     if !has('nvim')
       Plugin 'Valloric/YouCompleteMe'
       Plugin 'benekastah/neomake'
@@ -56,6 +65,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
       Plugin 'Shougo/context_filetype.vim'
       Plugin 'Shougo/deoplete.nvim'
     endif
+    "Plugin 'artur-shaik/vim-javacomplete2'
   " }}}
 
   call vundle#end()
@@ -64,12 +74,15 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 
 " Visuals {{{
   set number
-  set background=dark
+  set background=light
   set guifont=Liberation\ Mono\ for\ Powerline:h12
   "syntax on
   if !exists("g:syntax_on")
     syntax enable
-    colorscheme onedark
+    "let ayucolor="light"
+    "colorscheme base16-unikitty-light
+    set background=light
+    colorscheme nova
   let g:onedark_terminal_italics=1
   endif
   set conceallevel=0
@@ -102,13 +115,29 @@ let g:python3_host_prog = '/usr/local/bin/python3'
   endif
 
   " Airline config {{{
-    let g:airline_theme='base16_ocean'
+    let g:airline_theme='base16_hopscotch'
     let g:airline_powerline_fonts = 1
     let g:airline#extensions#tabline#enabled = 1
     let g:airline#extensions#tabline#fnamemod = ':t'
-    let g:airline#extensions#whitespace#enabled = 1
+    let g:airline#extensions#whitespace#enabled = 0
     let g:airline#extensions#wordcount#enabled = 0
-    let g:airline#extensions#tabline#show_close_button = 1
+    let g:airline#extensions#tabline#show_close_button = 0
+    let g:airline#extensions#branch#enabled = 0
+    let g:airline#extensions#hunks#enabled = 0
+    let g:airline_skip_empty_sections = 1
+    let g:airline_mode_map = {
+      \ '__' : '-',
+      \ 'n'  : 'N',
+      \ 'i'  : 'I',
+      \ 'R'  : 'R',
+      \ 'c'  : 'C',
+      \ 'v'  : 'V',
+      \ 'V'  : 'V',
+      \ '' : 'V',
+      \ 's'  : 'S',
+      \ 'S'  : 'S',
+      \ '' : 'S',
+      \ }
     set laststatus=2
   " }}}
   " Indent guides {{{
@@ -141,10 +170,13 @@ let g:python3_host_prog = '/usr/local/bin/python3'
   set expandtab
   let g:tex_conceal = ""
 
+  set nofoldenable
+
   autocmd FileType go set noexpandtab|set tabstop=4|set shiftwidth=4|set softtabstop=4
   autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType markdown set tabstop=2|set shiftwidth=2|set softtabstop=2
-  autocmd FileType cpp set tabstop=4|set shiftwidth=4|set softtabstop=4
+  autocmd FileType cpp set tabstop=2|set shiftwidth=2|set softtabstop=2
+  autocmd FileType c set tabstop=2|set shiftwidth=2|set softtabstop=2
   "autocmd FileType perl set tabstop=4|set shiftwidth=4|set softtabstop=4
   "autocmd FileType perl6 set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType scss set tabstop=2|set shiftwidth=2|set softtabstop=2
@@ -161,6 +193,9 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 
 " Key mappings {{{
   set smartindent
+  set breakindent
+  "let &showbreak = '↳ '
+  "set cpo+=n
   if has("nvim")
     tnoremap <Esc> <C-\><C-n>
 
@@ -189,10 +224,14 @@ let g:python3_host_prog = '/usr/local/bin/python3'
           \ "\<Enter>"
   endif
 
+  "autocmd FileType java setlocal omnifunc=javacomplete#Complete
+
   noremap L :tabnext<CR>
   noremap H :tabprev<CR>
   set whichwrap+=>,l
   set whichwrap+=<,h
+
+  noremap ,, "_cc
 
   " Navigation for soft wrapping
   map <silent> <Up> gk
@@ -220,6 +259,16 @@ let g:python3_host_prog = '/usr/local/bin/python3'
   :command Q q
 " }}}
 
+  " Markdown {{{
+    let g:mkdp_refresh_on_save = 1
+    let g:mkdp_path_to_chrome = "open -a Safari"
+    nmap <silent> <Leader>mm <Plug>MarkdownPreview
+    nmap <silent> <Leader>mn <Plug>StopMarkdownPreview
+
+    let g:vim_markdown_math = 1
+  " }}}
+
+
 " Environment setup {{{
   let g:AutoPairsMultilineClose=0
   "set runtimepath+=~/.vim/bundle/deoplete.nvim/
@@ -237,6 +286,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
   set hlsearch
 
   set nocompatible
+  "set lazyredraw
 
   " The default for 'backspace' is very confusing to new users, so change it to a
   " more sensible value.  Add "set backspace&" to your ~/.vimrc to reset it.
@@ -249,7 +299,8 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 
   " ignores for ctrl-p
   let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
-  set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.idea/*,*/.DS_Store,*/vendor,*/*.o,*/*.d
+  let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+  set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.idea/*,*/.DS_Store,*/vendor,*/*.o,*/*.d,*/*.class
 
   " Send more characters for redraws
   set ttyfast
