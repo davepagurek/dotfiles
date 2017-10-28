@@ -10,53 +10,51 @@ let g:python3_host_prog = '/usr/local/bin/python3'
   Plugin 'VundleVim/Vundle.vim'
 
   " Plugins {{{
+    " Languages
+    Plugin 'leafgarland/typescript-vim'
     Plugin 'vim-ruby/vim-ruby'
+    Plugin 'tpope/vim-rvm'
+    Plugin 'keith/swift.vim'
     Plugin 'lervag/vimtex'
-    Plugin 'tpope/vim-fugitive'
-    Plugin 'kien/ctrlp.vim'
-    Plugin 'bling/vim-airline'
-    Plugin 'paranoida/vim-airlineish'
-    Plugin 'vim-airline/vim-airline-themes'
-    Plugin 'tpope/vim-surround'
-    Plugin 'chriskempson/base16-vim'
-    Plugin 'aliou/moriarty.vim'
-    Plugin 'vim-scripts/obsidian2.vim'
-    Plugin 'joshdick/onedark.vim'
-    Plugin 'rakr/vim-one'
-    Plugin 'joshdick/airline-onedark.vim'
-    Plugin 'gosukiwi/vim-atom-dark'
-    Plugin 'toupeira/vim-desertink'
-    Plugin 'mkarmona/colorsbox'
-    Plugin 'flazz/vim-colorschemes'
-    Plugin 'zanglg/nova.vim'
-    Plugin 'ayu-theme/ayu-vim'
-    Plugin 'roosta/srcery'
-    Plugin 'jiangmiao/auto-pairs'
-    "Plugin 'Townk/vim-autoclose'
-    Plugin 'airblade/vim-gitgutter'
     Plugin 'isRuslan/vim-es6'
-    Plugin 'scrooloose/nerdcommenter'
-    Plugin 'vim-scripts/DrawIt'
-    Plugin 'scrooloose/syntastic'
-    Plugin 'marijnh/tern_for_vim'
-    Plugin 'terryma/vim-multiple-cursors'
-    if !has('g:loaded_indentLine')
-      let g:loaded_indentLine = 1
-      Plugin 'Yggdroot/indentLine'
-    endif
     Plugin 'ap/vim-css-color'
     Plugin 'dart-lang/dart-vim-plugin'
     Plugin 'fatih/vim-go'
     Plugin 'sophacles/vim-processing'
-    Plugin 'godlygeek/tabular'
     Plugin 'plasticboy/vim-markdown'
     Plugin 'jaxbot/syntastic-react'
     Plugin 'elzr/vim-json'
     Plugin 'derekwyatt/vim-scala'
     Plugin 'vim-perl/vim-perl'
+
+    " Integrations
+    Plugin 'tpope/vim-fugitive'
+    Plugin 'marijnh/tern_for_vim'
+
+    " Notetaking
     Plugin 'iamcco/mathjax-support-for-mkdp'
-    Plugin 'iamcco/markdown-preview.vim'
+    Plugin 'davepagurek/markdown-preview.vim'
     Plugin 'drmingdrmer/vim-syntax-markdown'
+
+    " Editor
+    Plugin 'kien/ctrlp.vim'
+    Plugin 'itchyny/lightline.vim'
+    Plugin 'tpope/vim-surround'
+    Plugin 'jiangmiao/auto-pairs'
+    Plugin 'airblade/vim-gitgutter'
+    Plugin 'scrooloose/nerdcommenter'
+    Plugin 'w0rp/ale'
+    if !has('g:loaded_indentLine')
+      let g:loaded_indentLine = 1
+      Plugin 'Yggdroot/indentLine'
+    endif
+    Plugin 'godlygeek/tabular'
+
+    " Colors
+    Plugin 'chriskempson/base16-vim'
+    Plugin 'flazz/vim-colorschemes'
+    Plugin 'zanglg/nova.vim'
+
     if !has('nvim')
       Plugin 'Valloric/YouCompleteMe'
       Plugin 'benekastah/neomake'
@@ -65,7 +63,6 @@ let g:python3_host_prog = '/usr/local/bin/python3'
       Plugin 'Shougo/context_filetype.vim'
       Plugin 'Shougo/deoplete.nvim'
     endif
-    "Plugin 'artur-shaik/vim-javacomplete2'
   " }}}
 
   call vundle#end()
@@ -79,8 +76,6 @@ let g:python3_host_prog = '/usr/local/bin/python3'
   "syntax on
   if !exists("g:syntax_on")
     syntax enable
-    "let ayucolor="light"
-    "colorscheme base16-unikitty-light
     set background=light
     colorscheme nova
   let g:onedark_terminal_italics=1
@@ -114,31 +109,23 @@ let g:python3_host_prog = '/usr/local/bin/python3'
     endif
   endif
 
-  " Airline config {{{
-    let g:airline_theme='base16_hopscotch'
-    let g:airline_powerline_fonts = 1
-    let g:airline#extensions#tabline#enabled = 1
-    let g:airline#extensions#tabline#fnamemod = ':t'
-    let g:airline#extensions#whitespace#enabled = 0
-    let g:airline#extensions#wordcount#enabled = 0
-    let g:airline#extensions#tabline#show_close_button = 0
-    let g:airline#extensions#branch#enabled = 0
-    let g:airline#extensions#hunks#enabled = 0
-    let g:airline_skip_empty_sections = 1
-    let g:airline_mode_map = {
-      \ '__' : '-',
-      \ 'n'  : 'N',
-      \ 'i'  : 'I',
-      \ 'R'  : 'R',
-      \ 'c'  : 'C',
-      \ 'v'  : 'V',
-      \ 'V'  : 'V',
-      \ '' : 'V',
-      \ 's'  : 'S',
-      \ 'S'  : 'S',
-      \ '' : 'S',
-      \ }
-    set laststatus=2
+  " Lightline config {{{
+  let g:lightline = {
+        \ 'active': {
+        \   'left': [['mode', 'paste'], ['filename', 'modified']],
+        \   'right': [['filetype', 'lineinfo'], ['percent'], ['readonly', 'linter_warnings', 'linter_errors', 'linter_ok']]
+        \ },
+        \ 'component_expand': {
+        \   'linter_warnings': 'LightlineLinterWarnings',
+        \   'linter_errors': 'LightlineLinterErrors',
+        \   'linter_ok': 'LightlineLinterOK'
+        \ },
+        \ 'component_type': {
+        \   'readonly': 'error',
+        \   'linter_warnings': 'warning',
+        \   'linter_errors': 'error'
+        \ },
+        \ }
   " }}}
   " Indent guides {{{
     let g:indent_guides_enable_on_vim_startup = 0
@@ -174,6 +161,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 
   autocmd FileType go set noexpandtab|set tabstop=4|set shiftwidth=4|set softtabstop=4
   autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2
+  autocmd FileType typescript set tabstop=4|set shiftwidth=4|set softtabstop=4
   autocmd FileType markdown set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType cpp set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType c set tabstop=2|set shiftwidth=2|set softtabstop=2
@@ -181,9 +169,8 @@ let g:python3_host_prog = '/usr/local/bin/python3'
   "autocmd FileType perl6 set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType scss set tabstop=2|set shiftwidth=2|set softtabstop=2
 
- let g:syntastic_javascript_checkers = ['eslint']
- let g:syntastic_cpp_compiler = 'clang++'
- let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
+  let g:ale_linters = {'javascript': ['eslint']}
+  let g:ale_lint_on_text_changed = 'never'
 
   " Automatic autocompletion triggering for CSS
   let g:ycm_semantic_triggers = {
@@ -326,18 +313,3 @@ let g:python3_host_prog = '/usr/local/bin/python3'
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
   endif
 " }
-
-
-function! RefreshUI()
-  if exists(':AirlineRefresh')
-    AirlineRefresh
-  else
-    " Clear & redraw the screen, then redraw all statuslines.
-    redraw!
-    redrawstatus!
-  endif
-  if exists(':IndentLinesEnable')
-    IndentLinesEnable
-  endif
-endfunction
-"call RefreshUI()
