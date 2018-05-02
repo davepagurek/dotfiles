@@ -2,6 +2,7 @@
 let g:python_host_prog = '/usr/local/bin/python'
 let g:python3_host_prog = '/usr/local/bin/python3'
 
+
 " Vundle setup {{{
   set nocompatible
   filetype off
@@ -27,6 +28,9 @@ let g:python3_host_prog = '/usr/local/bin/python3'
     Plugin 'derekwyatt/vim-scala'
     Plugin 'vim-perl/vim-perl'
 
+    " Local project settings
+    Plugin 'embear/vim-localvimrc'
+
     " Integrations
     Plugin 'tpope/vim-fugitive'
     Plugin 'marijnh/tern_for_vim'
@@ -36,6 +40,9 @@ let g:python3_host_prog = '/usr/local/bin/python3'
     Plugin 'davepagurek/markdown-preview.vim'
     Plugin 'drmingdrmer/vim-syntax-markdown'
 
+    " Prose
+    Plugin 'junegunn/goyo.vim'
+
     " Editor
     Plugin 'kien/ctrlp.vim'
     Plugin 'itchyny/lightline.vim'
@@ -44,10 +51,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
     Plugin 'airblade/vim-gitgutter'
     Plugin 'scrooloose/nerdcommenter'
     Plugin 'w0rp/ale'
-    if !has('g:loaded_indentLine')
-      let g:loaded_indentLine = 1
-      Plugin 'Yggdroot/indentLine'
-    endif
+    Plugin 'Yggdroot/indentLine'
     Plugin 'godlygeek/tabular'
 
     " Colors
@@ -80,9 +84,6 @@ let g:python3_host_prog = '/usr/local/bin/python3'
     colorscheme nova
   let g:onedark_terminal_italics=1
   endif
-  set conceallevel=0
-  set cole=0 
-  au FileType * setl cole=0 
   let g:vim_json_syntax_conceal=0
 
   highlight clear SignColumn
@@ -127,26 +128,19 @@ let g:python3_host_prog = '/usr/local/bin/python3'
         \ },
         \ }
   " }}}
+
   " Indent guides {{{
-    let g:indent_guides_enable_on_vim_startup = 0
-    if !exists('g:indentLine_enabled')
-      let g:indentLine_enabled = 0
-    endif
     let g:indentLine_showFirstIndentLevel = 1
     let g:indentLine_char = '│'
     let g:indentLine_first_char = '│'
-    "let g:indentLine_concealcursor=0
-    "let g:indentLine_noConcealCursor=1
+    let g:indentLine_conceallevel = 2
+    let g:indentLine_enabled = 1
+
+    autocmd BufRead * set conceallevel=0
+    autocmd FileType * let g:indentLine_enabled=1
+    autocmd FileType markdown let g:indentLine_enabled=0
+    autocmd FileType json let g:indentLine_enabled=0
     set list lcs=tab:\│\ 
-    "autocmd BufRead * :IndentLinesEnable
-    function! ShowLines()
-      if has('nvim_dot_app')
-        put ='called once'
-      else
-        :IndentLinesReset
-      endif
-    endfunction
-    au FileType,BufRead,BufEnter,BufNewFile * call ShowLines()
   " }}}
 " }}}
 
@@ -163,6 +157,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
   autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType typescript set tabstop=4|set shiftwidth=4|set softtabstop=4
   autocmd FileType markdown set tabstop=2|set shiftwidth=2|set softtabstop=2
+  autocmd FileType markdown setlocal spell spelllang=en_ca
   autocmd FileType cpp set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType c set tabstop=2|set shiftwidth=2|set softtabstop=2
   "autocmd FileType perl set tabstop=4|set shiftwidth=4|set softtabstop=4
