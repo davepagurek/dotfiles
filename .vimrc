@@ -27,6 +27,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
     Plugin 'elzr/vim-json'
     Plugin 'derekwyatt/vim-scala'
     Plugin 'vim-perl/vim-perl'
+    Plugin 'rhysd/vim-clang-format'
 
     " Local project settings
     Plugin 'embear/vim-localvimrc'
@@ -164,7 +165,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
   "autocmd FileType perl6 set tabstop=2|set shiftwidth=2|set softtabstop=2
   autocmd FileType scss set tabstop=2|set shiftwidth=2|set softtabstop=2
 
-  let g:ale_linters = {'javascript': ['eslint']}
+  let g:ale_linters = {'javascript': ['eslint'], 'cpp': ['clang']}
   let g:ale_lint_on_text_changed = 'never'
 
   " Automatic autocompletion triggering for CSS
