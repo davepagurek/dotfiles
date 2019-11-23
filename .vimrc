@@ -12,6 +12,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 
   " Plugins {{{
     " Languages
+    Plugin 'JuliaEditorSupport/julia-vim'
     Plugin 'leafgarland/typescript-vim'
     Plugin 'vim-ruby/vim-ruby'
     Plugin 'tpope/vim-rvm'
